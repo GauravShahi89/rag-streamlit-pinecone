@@ -11,10 +11,12 @@ load_dotenv()
 
 INDEX_NAME= "qa-knowledge-base-1"
 
+openai_api_key = os.getenv("OPENAI_API_KEY") or st.secrets["OPENAI_API_KEY"]
+pinecone_api_key = os.getenv("PINECONE_API_KEY") or st.secrets["PINECONE_API_KEY"]
 
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small", api_key=openai_api_key)
 
-pc =Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
+pc =Pinecone(api_key=pinecone_api_key)
 index=pc.Index(INDEX_NAME)
 vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
@@ -23,7 +25,7 @@ retriever = vector_store.as_retriever(search_kwargs={"k":3})
 st.title("Quick Resolution to your Query")
 query = st.text_input("What is your Query: ", placeholder="Enter your query here..")
 
-llm=ChatOpenAI(model="gpt-5.4",temperature=0)
+llm=ChatOpenAI(model="gpt-5.4",temperature=0, api_key=openai_api_key)
 if st.button("Generate Response") and query:
     content=[]
     Question_Answer_Chunk = retriever.invoke(query)

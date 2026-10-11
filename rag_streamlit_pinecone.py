@@ -22,7 +22,7 @@ vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
 retriever = vector_store.as_retriever(search_kwargs={"k":3})
 
-st.title("Quick Resolution to your Query")
+st.title("Banking Support Assistant")
 query = st.text_input("What is your Query: ", placeholder="Enter your query here..")
 
 llm=ChatOpenAI(model="gpt-5.4",temperature=0, api_key=openai_api_key)
